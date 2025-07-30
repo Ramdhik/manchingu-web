@@ -1,6 +1,6 @@
 import { ApiResponse, UserLogin, UserRegister } from './definition';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function registerUser(user: UserRegister): Promise<ApiResponse> {
   if (!BASE_URL) {
