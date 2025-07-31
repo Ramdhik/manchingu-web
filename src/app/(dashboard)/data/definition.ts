@@ -1,5 +1,5 @@
 export interface HomeProps {
-    token: String
+  token: string;
 }
 export interface Comic {
   id_comic: string;
