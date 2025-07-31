@@ -34,6 +34,16 @@ export default function Navbar({ token }: {token: string}) {
 
   return (
     <nav className="bg-primary w-full flex flex-row items-center justify-between p-4 shadow-md max-w-7xl mx-auto">
+      <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="Logo Manchingu"
+            width={80}
+            height={80}
+            className="w-auto h-auto"
+            priority
+          />
+        </Link>
       {authState === "loading" ? (
         <Skeleton className="h-[40px] w-[100px] bg-primary-foreground/20 opacity-80" />
         ) : (
