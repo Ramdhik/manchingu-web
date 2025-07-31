@@ -31,10 +31,8 @@ export function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-primary w-full flex flex-row items-center justify-between p-4 shadow-md max-w-7xl mx-auto">
-      {authState === "loading" ? (
-        <Skeleton className="h-[40px] w-[100px] bg-primary-foreground/20 opacity-80" />
-      ) : (
+    <nav className="bg-primary w-full flex flex-row items-center justify-between p-4 max-w-7xl mx-auto">
+
         <Link href="/">
           <Image
             src="/logo.png"
@@ -45,13 +43,14 @@ export function Navbar() {
             priority
           />
         </Link>
-      )}
+
 
       <div className="min-w-[200px] flex justify-end">
-        {authState === "loading" ? (
-          <div className="flex gap-4">
-            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80" />
-            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80" />
+        {authState === 'loading' ? (
+          <div className="flex gap-4 items-center">
+            <Skeleton className="h-10 w-32 bg-primary-foreground/20 opacity-80 rounded-md" />
+            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80 rounded-md" />
+            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80 rounded-md" />
           </div>
         ) : authState === "authenticated" ? (
           <AuthenticatedLinks comics={comics} />
@@ -66,12 +65,8 @@ export function Navbar() {
 function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
   return (
     <div className="flex flex-row items-center gap-6">
-      <div className="flex gap-4 ">
-        <Button
-          asChild
-          variant="ghost"
-          className="text-white hover:bg-accent hover:text-white"
-        >
+      <div className="flex gap-4">
+        <Button asChild variant="ghost" className="text-white hover:bg-accent hover:text-white">
           <Link href="/">Home</Link>
         </Button>
         <Button
@@ -82,7 +77,7 @@ function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
           <Link href="/bookmarks">Bookmarks</Link>
         </Button>
       </div>
-      <SearchBar allComics={comics} />
+      <SearchBarWithSkeleton comics={comics} loading={false} />
     </div>
   );
 }
@@ -90,7 +85,7 @@ function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
 function GuestLinks({ comics }: { comics: Comic[] }) {
   return (
     <div className="flex flex-row items-center gap-4">
-      <SearchBar allComics={comics} />
+      <SearchBarWithSkeleton comics={comics} loading={false} />
       <Button asChild className="bg-accent text-white w-20">
         <Link href="/signin">Sign In</Link>
       </Button>
@@ -99,6 +94,18 @@ function GuestLinks({ comics }: { comics: Comic[] }) {
       </Button>
     </div>
   );
+}
+
+function SearchBarWithSkeleton({ comics, loading }: { comics: Comic[]; loading: boolean }) {
+  if (loading) {
+    return (
+      <div className="relative w-[300px]">
+        <Skeleton className="h-10 w-full bg-primary-foreground/20 opacity-80 rounded-md" />
+      </div>
+    );
+  }
+
+  return <SearchBar allComics={comics} />;
 }
 
 function SearchBar({ allComics }: { allComics: Comic[] }) {
@@ -115,10 +122,7 @@ function SearchBar({ allComics }: { allComics: Comic[] }) {
       return;
     }
 
-    const result = allComics.filter((comic) =>
-      comic.name.toLowerCase().includes(query.toLowerCase())
-    );
-
+    const result = allComics.filter((comic) => comic.name.toLowerCase().includes(query.toLowerCase()));
     setFiltered(result.slice(0, 5));
     setShowDropdown(true);
   }, [query, allComics]);
@@ -161,7 +165,7 @@ function SearchBar({ allComics }: { allComics: Comic[] }) {
       </form>
 
       {showDropdown && (
-        <div className="absolute z-50 mt-3 bg-background border border-muted rounded-md w-full shadow-md">
+        <div className="absolute z-50 mt-3 bg-background border border-muted rounded-md w-full">
           {filtered.length === 0 ? (
             <p className="text-sm text-muted-foreground px-3 py-2">
               No results found.
