@@ -11,6 +11,8 @@ import {
 import { fetchAllComics } from "./(dashboard)/data";
 import { Comic } from "./(dashboard)/data/definition";
 
+import { CarouselPlugin } from "./(dashboard)/popularTitles";
+
 export default async function Home() {
   const comics: Comic[] = await fetchAllComics();
 
@@ -27,7 +29,7 @@ export default async function Home() {
         </h1>
         {/* Tambahkan Card di sini */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-6 px-4">
-          {comics.slice(0, 3).map((comic) => (
+          {comics.slice(0, 12).map((comic) => (
             <CardComponent
               key={comic.id_comic}
               title={comic.name}
@@ -45,7 +47,9 @@ export default async function Home() {
 async function Slider() {
   return (
     <div className="flex justify-center">
-      <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden"></div>
+      <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden">
+        <CarouselPlugin />
+      </div>
     </div>
   );
 }
