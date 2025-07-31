@@ -1,4 +1,5 @@
 import { ApiResponse, UserLogin, UserRegister } from './definition';
+import { setToken } from './action';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -50,7 +51,7 @@ export async function loginUser(user: UserLogin): Promise<ApiResponse> {
 
   // Simpan token ke localStorage
   if (result.token) {
-    localStorage.setItem('token', result.token);
+    setToken(result.token)
   }
 
   return result;

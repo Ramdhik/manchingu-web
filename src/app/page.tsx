@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Navbar } from "./(dashboard)/navbar";
+import Navbar from "./(dashboard)/navbar";
 import {
   Card,
   CardHeader,
@@ -9,14 +9,16 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { fetchAllComics } from "./(dashboard)/data";
+import { getToken } from "./(dashboard)/data/action";
 import { Comic } from "./(dashboard)/data/definition";
 
 export default async function Home() {
   const comics: Comic[] = await fetchAllComics();
+  const token:string = await getToken()
 
   return (
     <div className="min-h-screen bg-primary">
-      <Navbar />
+      <Navbar token={token}/>
       <div className="flex flex-col justify-center py-2 bg-primary max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-primary-foreground px-4 mb-4">
           Popular Titles

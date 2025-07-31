@@ -1,39 +1,13 @@
-'use client'
-import { useEffect, useState } from "react";
-import { Data } from "../data/definition";
-import { getBookmarkList } from "../data";
-import { Navbar } from "@/app/(dashboard)/navbar";
-import BookmarkCollection from "./bookmarkCollection";
+import { cookies } from 'next/headers'
+import BookmarkComponent from './bookmarkComponent'
 
-export default function Bookmark() {
-    const [ token, setToken ] = useState<string>("loading")
-    const [ bookmarks, setBookmarks ] = useState<Data[]>()
-
-    useEffect(() => {
-        const getToken = () => {
-            const savedToken = localStorage.getItem("token")
-            if(savedToken) setToken(savedToken)
-        } 
-        getToken()
-    },[])
-
-    useEffect(() => {
-        const getApiRes = async () => {
-            if(token === "loading") return
-            const responseAllStatus = await getBookmarkList(token)
-            setBookmarks(responseAllStatus.data)
-        }
-
-        getApiRes()
-    },[token])
+export default async function Bookmark() {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('token')?.value || ""
 
     return(
-        <div className="bg-primary min-h-screen">
-            <Navbar />
-            {
-                bookmarks &&
-                <BookmarkCollection data={bookmarks} />
-            }
+        <div>
+            <BookmarkComponent token={token}/>
         </div>
     )
 }
