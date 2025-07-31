@@ -5,35 +5,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchAllComics } from "@/app/(dashboard)/data";
-import { Comic } from "@/app/(dashboard)/data/definition";
+import { usePathname } from "next/navigation";
+import { Comic } from "./data/definition";
+import { fetchAllComics } from "./data";
 
-export function Navbar() {
+export default function Navbar({ token }: {token: string}) {
   const [authState, setAuthState] = useState<
     "loading" | "authenticated" | "unauthenticated"
   >("loading");
-  const [comics, setComics] = useState<Comic[]>([]);
+  const [comics, setComics] = useState<Comic[]>()
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setTimeout(() => {
-      setAuthState(token ? "authenticated" : "unauthenticated");
-    });
-
+    if(token){
+        setAuthState("authenticated")
+    }else{
+      setAuthState("unauthenticated")
+    }
     const getComics = async () => {
-      const result = await fetchAllComics();
+    const result = await fetchAllComics ();
       setComics(result);
     };
 
     getComics();
   }, []);
 
-  return (
-    <nav className="bg-primary w-full flex flex-row items-center justify-between p-4 max-w-7xl mx-auto">
 
-        <Link href="/">
+  return (
+    <nav className="bg-primary w-full flex flex-row items-center justify-between p-4 shadow-md max-w-7xl mx-auto">
+      <Link href="/">
           <Image
             src="/logo.png"
             alt="Logo Manchingu"
@@ -43,49 +44,53 @@ export function Navbar() {
             priority
           />
         </Link>
-
-
-      <div className="min-w-[200px] flex justify-end">
-        {authState === 'loading' ? (
-          <div className="flex gap-4 items-center">
-            <Skeleton className="h-10 w-32 bg-primary-foreground/20 opacity-80 rounded-md" />
-            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80 rounded-md" />
-            <Skeleton className="h-10 w-20 bg-primary-foreground/20 opacity-80 rounded-md" />
-          </div>
-        ) : authState === "authenticated" ? (
-          <AuthenticatedLinks comics={comics} />
+      {authState === "loading" ? (
+        <Skeleton className="h-[40px] w-[100px] bg-primary-foreground/20 opacity-80" />
         ) : (
-          <GuestLinks comics={comics} />
-        )}
-      </div>
+      <div className="min-w-[200px] flex justify-end">
+        {authState === "unauthenticated" && comics ? (
+          <GuestLinks allComics={comics}/>
+        ) : authState === "authenticated" && comics ? (
+          <AuthenticatedLinks allComics={comics}/>
+        ) : null}
+      </div>)}
     </nav>
   );
 }
 
-function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
+function AuthenticatedLinks({ allComics }: { allComics: Comic[] }) {
+  const pathname = usePathname()
   return (
     <div className="flex flex-row items-center gap-6">
+      <div className="flex items-center relative">
+        <SearchBar allComics={allComics}/>
+      </div>
       <div className="flex gap-4">
-        <Button asChild variant="ghost" className="text-white hover:bg-accent hover:text-white">
+        <Button
+          asChild
+          variant="ghost"
+          className={`${pathname === "/" && "active"} text-white hover:bg-accent hover:text-white`}
+        >
           <Link href="/">Home</Link>
         </Button>
         <Button
           asChild
           variant="ghost"
-          className="text-white hover:bg-accent hover:text-white"
+          className={`${pathname === "/bookmarks" && "active"} text-white hover:bg-accent hover:text-white`}
         >
           <Link href="/bookmarks">Bookmarks</Link>
         </Button>
       </div>
-      <SearchBarWithSkeleton comics={comics} loading={false} />
     </div>
   );
 }
 
-function GuestLinks({ comics }: { comics: Comic[] }) {
+function GuestLinks({ allComics }: { allComics: Comic[] }) {
   return (
     <div className="flex flex-row items-center gap-4">
-      <SearchBarWithSkeleton comics={comics} loading={false} />
+      <div className="flex items-center relative">
+        <SearchBar allComics={allComics}/>
+      </div>
       <Button asChild className="bg-accent text-white w-20">
         <Link href="/signin">Sign In</Link>
       </Button>
@@ -96,23 +101,11 @@ function GuestLinks({ comics }: { comics: Comic[] }) {
   );
 }
 
-function SearchBarWithSkeleton({ comics, loading }: { comics: Comic[]; loading: boolean }) {
-  if (loading) {
-    return (
-      <div className="relative w-[300px]">
-        <Skeleton className="h-10 w-full bg-primary-foreground/20 opacity-80 rounded-md" />
-      </div>
-    );
-  }
-
-  return <SearchBar allComics={comics} />;
-}
-
 function SearchBar({ allComics }: { allComics: Comic[] }) {
   const [query, setQuery] = useState("");
   const [filtered, setFiltered] = useState<Comic[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef <HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -122,7 +115,9 @@ function SearchBar({ allComics }: { allComics: Comic[] }) {
       return;
     }
 
-    const result = allComics.filter((comic) => comic.name.toLowerCase().includes(query.toLowerCase()));
+    const result = allComics.filter((comic) =>
+      comic.name.toLowerCase().includes(query.toLowerCase())
+    );
     setFiltered(result.slice(0, 5));
     setShowDropdown(true);
   }, [query, allComics]);

@@ -25,7 +25,7 @@ export function SigninForm() {
     };
 
     try {
-      await loginUser(userData);
+      const data = await loginUser(userData);
       router.push('/');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Login gagal');

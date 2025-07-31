@@ -1,44 +1,46 @@
 import Image from "next/image";
-import { Navbar } from "./(dashboard)/navbar";
-import { Card } from "@/components/ui/card";
+import Navbar from "./(dashboard)/navbar";
+import {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { fetchAllComics } from "./(dashboard)/data";
+import { getToken } from "./(dashboard)/data/action";
 import { Comic } from "./(dashboard)/data/definition";
 import { CarouselPlugin } from "./(dashboard)/popularTitles";
 
 export default async function Home() {
   const comics: Comic[] = await fetchAllComics();
+  const token:string = await getToken()
 
   return (
     <div className="min-h-screen bg-primary">
-      <Navbar />
-
-      <main className="flex flex-col justify-center py-2 bg-primary max-w-7xl mx-auto">
-        {/* Popular Titles Section */}
-        <section>
-          <h1 className="text-2xl font-bold text-primary-foreground px-4 mb-4">
-            Popular Titles
-          </h1>
-          <Slider />
-        </section>
-
-        {/* Recommended Comic Section */}
-        <section className="mt-6">
-          <h1 className="text-2xl font-bold text-primary-foreground px-4">
-            Recommended Comic
-          </h1>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 px-4">
-            {comics.slice(0, 10).map((comic) => (
-              <CardComponent
-                key={comic.id_comic}
-                title={comic.name}
-                description={comic.synopsis}
-                content={`Rating: ${comic.rating}`}
-                poster={comic.poster}
-              />
-            ))}
-          </div>
-        </section>
-      </main>
+      <Navbar token={token}/>
+      <div className="flex flex-col justify-center py-2 bg-primary max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-primary-foreground px-4 mb-4">
+          Popular Titles
+        </h1>
+        <Slider />
+        <h1 className="text-2xl font-bold text-primary-foreground px-4 mt-6">
+          Recomended Comic
+        </h1>
+        {/* Tambahkan Card di sini */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-6 px-4">
+          {comics.slice(0, 3).map((comic) => (
+            <CardComponent
+              key={comic.id_comic}
+              title={comic.name}
+              description={comic.synopsis}
+              content={`Rating: ${comic.rating}`}
+              poster={comic.poster}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
