@@ -47,7 +47,7 @@ export function Navbar() {
         ) : authState === 'authenticated' ? (
           <AuthenticatedLinks comics={comics} />
         ) : (
-          <GuestLinks />
+          <GuestLinks comics={comics} />
         )}
       </div>
     </nav>
@@ -70,10 +70,10 @@ function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
   );
 }
 
-function GuestLinks() {
+function GuestLinks({ comics }: { comics: Comic[] }) {
   return (
     <div className="flex flex-row items-center gap-4">
-      <SearchBar allComics={[]} />
+      <SearchBar allComics={comics} />
       <Button asChild className="bg-accent text-white w-20">
         <Link href="/signin">Sign In</Link>
       </Button>
