@@ -2,16 +2,29 @@ import { Button } from "@/components/ui/button";
 import { Data } from "../data/definition";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 export default function BookmarkCollection({ data }: { data: Data[] }) {
-    const [bookmarks, setBookmarks] = useState<Data[]>(data)
+    const [bookmarks, setBookmarks] = useState<Data[]>(data.filter((bookmark) => bookmark.status === "COMPLETED"))
     const [ filter, setFilter ] = useState<string>("COMPLETED")
 
     const BookmarksGrid = bookmarks.map((item) => {
         return (
-            <article className="h-[300px] p-5 flex bg-cover bg-center rounded-xl" style={{ backgroundImage: `url(${item.comic.poster})`}} key={item.id_bookmark}>
-                <h3 className="mt-auto font-bold text-xl">{item.comic.name}</h3>
-            </article>
+            <Card key={item.id_bookmark} className="relative w-full aspect-[2/3] bg-transparent shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-none">
+                <Image src={item.comic.poster} alt={item.comic.name} fill className="object-cover" />
+        
+                {/* Overlay judul */}
+                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3">
+                <h3 className="text-white text-lg font-semibold">{item.comic.name}</h3>
+                </div>
+            </Card>
         )
     })
 
