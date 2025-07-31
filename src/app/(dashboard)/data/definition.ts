@@ -1,3 +1,6 @@
+export interface HomeProps {
+    token: String
+}
 export interface Comic {
   id_comic: string;
   name: string;
