@@ -3,6 +3,7 @@ import { Navbar } from "./(dashboard)/navbar";
 import { Card } from "@/components/ui/card";
 import { fetchAllComics } from "./(dashboard)/data";
 import { Comic } from "./(dashboard)/data/definition";
+import { CarouselPlugin } from "./(dashboard)/popularTitles";
 
 export default async function Home() {
   const comics: Comic[] = await fetchAllComics();
@@ -45,7 +46,8 @@ export default async function Home() {
 async function Slider() {
   return (
     <div className="flex justify-center">
-      <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden" />
+      {/* <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden" /> */}
+      <CarouselPlugin />
     </div>
   );
 }
