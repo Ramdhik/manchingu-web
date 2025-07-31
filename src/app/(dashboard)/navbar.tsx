@@ -37,25 +37,13 @@ export default function Navbar({ token }: {token: string}) {
       {authState === "loading" ? (
         <Skeleton className="h-[40px] w-[100px] bg-primary-foreground/20 opacity-80" />
         ) : (
-        <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="Logo Manchingu"
-            width={80}
-            height={80}
-            className="w-auto h-auto"
-            priority
-          />
-        </Link>
-      )}
-
       <div className="min-w-[200px] flex justify-end">
         {authState === "unauthenticated" && comics ? (
           <GuestLinks allComics={comics}/>
         ) : authState === "authenticated" && comics ? (
           <AuthenticatedLinks allComics={comics}/>
         ) : null}
-      </div>
+      </div>)}
     </nav>
   );
 }

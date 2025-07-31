@@ -11,6 +11,7 @@ import {
 import { fetchAllComics } from "./(dashboard)/data";
 import { getToken } from "./(dashboard)/data/action";
 import { Comic } from "./(dashboard)/data/definition";
+import { CarouselPlugin } from "./(dashboard)/popularTitles";
 
 export default async function Home() {
   const comics: Comic[] = await fetchAllComics();
@@ -47,12 +48,13 @@ export default async function Home() {
 async function Slider() {
   return (
     <div className="flex justify-center">
-      <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden"></div>
+      {/* <div className="relative h-[350px] w-full bg-primary-foreground/20 rounded-lg overflow-hidden" /> */}
+      <CarouselPlugin />
     </div>
   );
 }
 
-async function CardComponent({
+function CardComponent({
   title,
   description,
   content,
@@ -64,27 +66,8 @@ async function CardComponent({
   poster: string;
 }) {
   return (
-    // <Card className="w-full h-min bg-background shadow-lg hover:shadow-xl transition-shadow duration-300">
-    //   <CardHeader>
-    //     <Image
-    //       src={poster}
-    //       alt={title}
-    //       width={300}
-    //       height={400}
-    //       className="rounded-lg w-full h-auto object-cover mb-2"
-    //     />
-    //   </CardHeader>
-    //   <CardContent>
-    //     <CardTitle>{title}</CardTitle>
-    //     {/* <CardDescription>{description.slice(0, 80)}...</CardDescription>
-    //     <p className="text-sm text-muted-foreground">{content}</p> */}
-    //   </CardContent>
-    // </Card>
-
     <Card className="relative w-full aspect-[2/3] bg-transparent shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-none">
       <Image src={poster} alt={title} fill className="object-cover" />
-
-      {/* Overlay judul */}
       <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3">
         <h3 className="text-white text-lg font-semibold">{title}</h3>
       </div>
