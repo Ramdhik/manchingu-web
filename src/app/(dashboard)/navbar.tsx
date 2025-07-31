@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { fetchAllComics } from '@/app/(dashboard)/data';
 import { Comic } from '@/app/(dashboard)/data/definition';
 
@@ -19,7 +18,7 @@ export function Navbar() {
     const token = localStorage.getItem('token');
     setTimeout(() => {
       setAuthState(token ? 'authenticated' : 'unauthenticated');
-    }, 500); // simulasi loading
+    });
 
     const getComics = async () => {
       const result = await fetchAllComics();
@@ -74,6 +73,7 @@ function AuthenticatedLinks({ comics }: { comics: Comic[] }) {
 function GuestLinks() {
   return (
     <div className="flex flex-row items-center gap-4">
+      <SearchBar allComics={[]} />
       <Button asChild className="bg-accent text-white w-20">
         <Link href="/signin">Sign In</Link>
       </Button>
