@@ -38,7 +38,7 @@ async function Slider() {
 
 function CardComponent({ id, title, poster }: { id: string; title: string; description: string; content: string; poster: string }) {
   return (
-    <Link href={`${id}`} className="group">
+    <Link href={`/comic/${id}`} className="group">
       <Card className="relative w-full aspect-[2/3] bg-transparent shadow-lg border-none overflow-hidden transform transition-transform duration-300 group-hover:-translate-y-2">
         <Image src={poster} alt={title} fill className="object-cover" />
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3">
