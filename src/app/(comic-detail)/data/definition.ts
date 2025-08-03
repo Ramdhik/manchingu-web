@@ -72,3 +72,15 @@ export interface Comic {
     rating: number,
     bookmarked: number
 }
+
+// User response
+export interface UserResponse {
+  success: boolean;
+  data: UserData
+}
+
+export interface UserData {
+    id_user: string;
+    email: string;
+    username: string;
+}
